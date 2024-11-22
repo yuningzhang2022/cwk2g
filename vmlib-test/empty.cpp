@@ -127,33 +127,33 @@ TEST_CASE("Perspective projection matrix tests", "[mat44]")
     }
 }
 
-//TEST_CASE("Matrix transpose test", "[mat44]")
-//{
-//    SECTION("Transpose identity matrix")
-//    {
-//        Mat44f transposed = transpose(kIdentity44f);
-//        for (std::size_t i = 0; i < 4; ++i) {
-//            for (std::size_t j = 0; j < 4; ++j) {
-//                REQUIRE(transposed(i, j) == kIdentity44f(i, j));
-//            }
-//        }
-//    }
-//
-//    SECTION("Transpose general matrix")
-//    {
-//        Mat44f original = {
-//            1.f, 2.f, 3.f, 4.f,
-//            5.f, 6.f, 7.f, 8.f,
-//            9.f, 10.f, 11.f, 12.f,
-//            13.f, 14.f, 15.f, 16.f
-//        };
-//
-//        Mat44f transposed = transpose(original);
-//
-//        for (std::size_t i = 0; i < 4; ++i) {
-//            for (std::size_t j = 0; j < 4; ++j) {
-//                REQUIRE(transposed(i, j) == original(j, i));
-//            }
-//        }
-//    }
-//}
+TEST_CASE("Matrix transpose test", "[mat44]")
+{
+    SECTION("Transpose identity matrix")
+    {
+        Mat44f transposed = transpose(kIdentity44f);
+        for (std::size_t i = 0; i < 4; ++i) {
+            for (std::size_t j = 0; j < 4; ++j) {
+                REQUIRE(transposed(i, j) == kIdentity44f(i, j));
+            }
+        }
+    }
+
+    SECTION("Transpose general matrix")
+    {
+        Mat44f original = {
+            1.f, 2.f, 3.f, 4.f,
+            5.f, 6.f, 7.f, 8.f,
+            9.f, 10.f, 11.f, 12.f,
+            13.f, 14.f, 15.f, 16.f
+        };
+
+        Mat44f transposed = transpose(original);
+
+        for (std::size_t i = 0; i < 4; ++i) {
+            for (std::size_t j = 0; j < 4; ++j) {
+                REQUIRE(transposed(i, j) == original(j, i));
+            }
+        }
+    }
+}
