@@ -54,14 +54,14 @@ constexpr Mat33f kIdentity33f = { {
 // Common operators for Mat33f.
 
 constexpr
-Vec3f operator*( Mat33f const& aLeft, Vec3f const& aRight ) noexcept
-{
-	//TODO: your implementation goes here
-	//TODO: remove the following when you start your implementation
-	(void)aLeft;   // Avoid warnings about unused arguments until the function
-	(void)aRight;  // is properly implemented.
-	return { 0.f, 0.f, 0.f };
+Vec3f operator*(Mat33f const& aLeft, Vec3f const& aRight) noexcept {
+	return Vec3f{
+		aLeft(0, 0) * aRight.x + aLeft(0, 1) * aRight.y + aLeft(0, 2) * aRight.z,
+		aLeft(1, 0) * aRight.x + aLeft(1, 1) * aRight.y + aLeft(1, 2) * aRight.z,
+		aLeft(2, 0) * aRight.x + aLeft(2, 1) * aRight.y + aLeft(2, 2) * aRight.z
+	};
 }
+
 
 // Functions:
 inline

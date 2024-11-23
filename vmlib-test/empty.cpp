@@ -1,5 +1,148 @@
 #include <catch2/catch_amalgamated.hpp>
+#include "../vmlib/mat22.hpp"
+#include "../vmlib/mat33.hpp"
 #include "../vmlib/mat44.hpp"
+
+
+//====== test ========
+
+TEST_CASE("Mat22f multiplication tests", "[mat22]")
+{
+    SECTION("Identity matrix multiplication")
+    {
+        Mat22f identity = { 1.f, 0.f, 0.f, 1.f };
+        Mat22f result = identity * identity;
+
+        REQUIRE(result._00 == identity._00);
+        REQUIRE(result._01 == identity._01);
+        REQUIRE(result._10 == identity._10);
+        REQUIRE(result._11 == identity._11);
+    }
+
+    SECTION("Matrix-vector multiplication with identity")
+    {
+        Mat22f identity = { 1.f, 0.f, 0.f, 1.f };
+        Vec2f testVec = { 2.f, 3.f };
+        Vec2f result = identity * testVec;
+
+        REQUIRE(result.x == testVec.x);
+        REQUIRE(result.y == testVec.y);
+    }
+
+    SECTION("General matrix multiplication")
+    {
+        Mat22f mat1 = { 2.f, -1.f,
+                       1.f,  3.f };
+        Mat22f mat2 = { 1.f,  2.f,
+                       3.f,  4.f };
+        Mat22f result = mat1 * mat2;
+
+        REQUIRE(result._00 == Catch::Approx(-1.f));
+        REQUIRE(result._01 == Catch::Approx(0.f));
+        REQUIRE(result._10 == Catch::Approx(10.f));
+        REQUIRE(result._11 == Catch::Approx(14.f));
+    }
+}
+
+TEST_CASE("Mat22f rotation tests", "[mat22]")
+{
+    SECTION("Rotation 90 degrees")
+    {
+        float const pi = 3.14159265359f;
+        Mat22f rot = make_rotation_2d(pi / 2.f);
+        Vec2f point = { 1.f, 0.f };
+        Vec2f rotated = rot * point;
+
+        REQUIRE(rotated.x == Catch::Approx(0.f).margin(0.00001));
+        REQUIRE(rotated.y == Catch::Approx(1.f).margin(0.00001));
+    }
+
+    SECTION("Rotation 180 degrees")
+    {
+        float const pi = 3.14159265359f;
+        Mat22f rot = make_rotation_2d(pi);
+        Vec2f point = { 1.f, 0.f };
+        Vec2f rotated = rot * point;
+
+        REQUIRE(rotated.x == Catch::Approx(-1.f).margin(0.00001));
+        REQUIRE(rotated.y == Catch::Approx(0.f).margin(0.00001));
+    }
+}
+
+TEST_CASE("Mat22f special cases", "[mat22]")
+{
+    SECTION("Zero vector transformation")
+    {
+        Mat22f mat = { 2.f, 3.f,
+                      4.f, 5.f };
+        Vec2f zeroVec = { 0.f, 0.f };
+        Vec2f result = mat * zeroVec;
+
+        REQUIRE(result.x == 0.f);
+        REQUIRE(result.y == 0.f);
+    }
+
+    SECTION("Identity transformation")
+    {
+        Mat22f identity = { 1.f, 0.f,
+                           0.f, 1.f };
+        Vec2f vec = { 3.f, 4.f };
+        Vec2f result = identity * vec;
+
+        REQUIRE(result.x == vec.x);
+        REQUIRE(result.y == vec.y);
+    }
+}
+
+// ======== test Mat33 ============
+
+TEST_CASE("Mat33f operations", "[Mat33f]") {
+    SECTION("Matrix-vector multiplication") {
+        Mat33f mat = {
+            1.f, 2.f, 3.f,
+            4.f, 5.f, 6.f,
+            7.f, 8.f, 9.f
+        };
+        Vec3f vec = { 1.f, 0.f, 0.f };
+        Vec3f result = mat * vec;
+
+        REQUIRE(result.x == Catch::Approx(1.f));
+        REQUIRE(result.y == Catch::Approx(4.f));
+        REQUIRE(result.z == Catch::Approx(7.f));
+    }
+
+    SECTION("Identity matrix-vector multiplication") {
+        Mat33f identity = kIdentity33f;
+        Vec3f vec = { 1.f, 2.f, 3.f };
+        Vec3f result = identity * vec;
+
+        REQUIRE(result.x == Catch::Approx(vec.x));
+        REQUIRE(result.y == Catch::Approx(vec.y));
+        REQUIRE(result.z == Catch::Approx(vec.z));
+    }
+
+    SECTION("mat44_to_mat33 conversion") {
+        Mat44f mat44 = {
+            1.f, 2.f, 3.f, 4.f,
+            5.f, 6.f, 7.f, 8.f,
+            9.f, 10.f, 11.f, 12.f,
+            13.f, 14.f, 15.f, 16.f
+        };
+        Mat33f mat33 = mat44_to_mat33(mat44);
+
+        REQUIRE(mat33(0, 0) == Catch::Approx(1.f));
+        REQUIRE(mat33(0, 1) == Catch::Approx(2.f));
+        REQUIRE(mat33(0, 2) == Catch::Approx(3.f));
+        REQUIRE(mat33(1, 0) == Catch::Approx(5.f));
+        REQUIRE(mat33(1, 1) == Catch::Approx(6.f));
+        REQUIRE(mat33(1, 2) == Catch::Approx(7.f));
+        REQUIRE(mat33(2, 0) == Catch::Approx(9.f));
+        REQUIRE(mat33(2, 1) == Catch::Approx(10.f));
+        REQUIRE(mat33(2, 2) == Catch::Approx(11.f));
+    }
+}
+
+// ======== test Mat44 ============
 
 TEST_CASE("Matrix multiplication tests", "[mat44]")
 {

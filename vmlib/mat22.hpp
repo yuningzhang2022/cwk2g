@@ -27,43 +27,36 @@ struct Mat22f
 // Note that you will need to implement these yourself.
 
 constexpr
-Mat22f operator*( Mat22f const& aLeft, Mat22f const& aRight ) noexcept
-{
-	//TODO: your implementation goes here
-	//TODO: your implementation goes here
-	//TODO: your implementation goes here
-
-	//TODO: remove the following when you start your implementation
-	(void)aLeft; // Avoid warnings about unused arguments until the function
-	(void)aRight;  // is properly implemented.
-	return Mat22f{ 1.f, 0.f, 0.f, 1.f };
+Mat22f operator*(Mat22f const& aLeft, Mat22f const& aRight) noexcept {
+	return Mat22f{
+		aLeft._00 * aRight._00 + aLeft._01 * aRight._10, // _00
+		aLeft._00 * aRight._01 + aLeft._01 * aRight._11, // _01
+		aLeft._10 * aRight._00 + aLeft._11 * aRight._10, // _10
+		aLeft._10 * aRight._01 + aLeft._11 * aRight._11  // _11
+	};
 }
+
 
 constexpr
-Vec2f operator*( Mat22f const& aLeft, Vec2f const& aRight ) noexcept
-{
-	//TODO: your implementation goes here
-	//TODO: your implementation goes here
-	//TODO: your implementation goes here
-
-	//TODO: remove the following when you start your implementation
-	(void)aLeft; // Avoid warnings about unused arguments until the function
-	return aRight;
+Vec2f operator*(Mat22f const& aLeft, Vec2f const& aRight) noexcept {
+	return Vec2f{
+		aLeft._00 * aRight.x + aLeft._01 * aRight.y, // x
+		aLeft._10 * aRight.x + aLeft._11 * aRight.y  // y
+	};
 }
+
 
 // Functions:
 
 inline
-Mat22f make_rotation_2d( float aAngle ) noexcept
-{
-	//TODO: your implementation goes here
-	//TODO: your implementation goes here
-	//TODO: your implementation goes here
-
-	//TODO: remove the following when you start your implementation
-	(void)aAngle; // Avoid warnings about unused arguments until the function
-	              // is properly implemented.
-	return Mat22f{ 1.f, 0.f, 0.f, 1.f };
+Mat22f make_rotation_2d(float aAngle) noexcept {
+	float c = std::cos(aAngle);
+	float s = std::sin(aAngle);
+	return Mat22f{
+		c, -s,
+		s, c
+	};
 }
+
 
 #endif // MAT22_HPP_1F974C02_D0D1_4FBD_B5EE_A69C88112088

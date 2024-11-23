@@ -17,6 +17,11 @@
 
 #include "defaults.hpp"
 
+#include <vector>
+#include "../vmlib/mat33.hpp"
+#include "../vmlib/vec3.hpp"
+#include <tiny_obj_loader.h>
+
 
 namespace
 {
