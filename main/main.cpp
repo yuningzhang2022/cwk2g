@@ -17,10 +17,7 @@
 
 #include "defaults.hpp"
 
-#include <vector>
-#include "../vmlib/mat33.hpp"
-#include "../vmlib/vec3.hpp"
-#include <tiny_obj_loader.h>
+
 
 
 namespace
@@ -30,6 +27,8 @@ namespace
 	void glfw_callback_error_( int, char const* );
 
 	void glfw_callback_key_( GLFWwindow*, int, int, int, int );
+
+	void glfw_callback_cursor_(GLFWwindow*, double, double);
 
 	struct GLFWCleanupHelper
 	{
@@ -97,7 +96,8 @@ int main() try
 	// TODO: Additional event handling setup
 
 	glfwSetKeyCallback( window, &glfw_callback_key_ );
-
+	glfwSetCursorPosCallback(window, &glfw_callback_cursor_);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
 	// Set up drawing stuff
 	glfwMakeContextCurrent( window );
 	glfwSwapInterval( 1 ); // V-Sync is on.
@@ -199,19 +199,102 @@ catch( std::exception const& eErr )
 
 namespace
 {
+	// add params
+	float lastX = 640.0f;  // (1280/2)
+	float lastY = 360.0f;  // (720/2)
+	bool firstMouse = true;
+	bool mouseEnabled = false;  // enable indicator
+
 	void glfw_callback_error_( int aErrNum, char const* aErrDesc )
 	{
 		std::fprintf( stderr, "GLFW error: %s (%d)\n", aErrDesc, aErrNum );
 	}
 
-	void glfw_callback_key_( GLFWwindow* aWindow, int aKey, int, int aAction, int )
+	void glfw_callback_key_(GLFWwindow* aWindow, int aKey, int, int aAction, int)
 	{
-		if( GLFW_KEY_ESCAPE == aKey && GLFW_PRESS == aAction )
+		if (GLFW_KEY_ESCAPE == aKey && GLFW_PRESS == aAction)
 		{
-			glfwSetWindowShouldClose( aWindow, GLFW_TRUE );
+			glfwSetWindowShouldClose(aWindow, GLFW_TRUE);
 			return;
 		}
+
+		// 空格切换鼠标模式
+		if (GLFW_KEY_SPACE == aKey && GLFW_PRESS == aAction)
+		{
+			mouseEnabled = !mouseEnabled;
+			if (mouseEnabled)
+			{
+				glfwSetInputMode(aWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+				std::printf("Mouse control enabled\n");
+			}
+			else
+			{
+				glfwSetInputMode(aWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+				std::printf("Mouse control disabled\n");
+			}
+			firstMouse = true;  // 重置鼠标状态
+			return;
+		}
+		// speed
+		float speedModifier = 1.0f;
+		if (glfwGetKey(aWindow, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+		{
+			speedModifier = 2.0f;  // 2x
+			std::printf("Speed up (x2)\n");
+		}
+		if (glfwGetKey(aWindow, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+		{
+			speedModifier = 0.5f;  // 0.5x
+			std::printf("Speed down (x0.5)\n");
+		}
+
+		// WSADQE control
+		if (aAction == GLFW_PRESS || aAction == GLFW_REPEAT)
+		{
+			switch (aKey)
+			{
+			case GLFW_KEY_W:
+				std::printf("Moving forward\n");
+				break;
+			case GLFW_KEY_S:
+				std::printf("Moving backward\n");
+				break;
+			case GLFW_KEY_A:
+				std::printf("Moving left\n");
+				break;
+			case GLFW_KEY_D:
+				std::printf("Moving right\n");
+				break;
+			case GLFW_KEY_E:
+				std::printf("Moving up\n");
+				break;
+			case GLFW_KEY_Q:
+				std::printf("Moving down\n");
+				break;
+			}
+		}
 	}
+	
+	// callback func
+	void glfw_callback_cursor_(GLFWwindow* window, double xpos, double ypos)
+	{
+		if (!mouseEnabled) return;  // 未启用则不处理鼠标
+		if (firstMouse)
+		{
+			lastX = xpos;
+			lastY = ypos;
+			firstMouse = false;
+			return;
+		}
+
+		float xoffset = xpos - lastX;
+		float yoffset = lastY - ypos;
+		lastX = xpos;
+		lastY = ypos;
+
+		std::printf("Mouse moved - X offset: %.1f, Y offset: %.1f\n", xoffset, yoffset);
+	}
+
 
 }
 
