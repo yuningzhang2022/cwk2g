@@ -17,6 +17,8 @@
 
 #include "defaults.hpp"
 
+#include "rapidobj/rapidobj.hpp"
+
 
 
 
@@ -93,8 +95,7 @@ int main() try
 	GLFWWindowDeleter windowDeleter{ window };
 
 	// Set up event handling
-	// TODO: Additional event handling setup
-
+	// TODO1: Additional event handling setup :done!
 	glfwSetKeyCallback( window, &glfw_callback_key_ );
 	glfwSetCursorPosCallback(window, &glfw_callback_cursor_);
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);  
@@ -120,7 +121,7 @@ int main() try
 	// Global GL state
 	OGL_CHECKPOINT_ALWAYS();
 
-	// TODO: global GL setup goes here
+	// TODO2: global GL setup goes here 
 
 	OGL_CHECKPOINT_ALWAYS();
 
@@ -136,7 +137,7 @@ int main() try
 	// Other initialization & loading
 	OGL_CHECKPOINT_ALWAYS();
 	
-	// TODO: global GL setup goes here
+	// TODO3: global GL setup goes here
 
 	OGL_CHECKPOINT_ALWAYS();
 
@@ -170,12 +171,12 @@ int main() try
 		}
 
 		// Update state
-		//TODO: update state
+		//TODO4: update state
 
 		// Draw scene
 		OGL_CHECKPOINT_DEBUG();
 
-		//TODO: draw frame
+		//TODO5: draw frame
 
 		OGL_CHECKPOINT_DEBUG();
 
@@ -184,7 +185,7 @@ int main() try
 	}
 
 	// Cleanup.
-	//TODO: additional cleanup
+	//TODO6: additional cleanup
 	
 	return 0;
 }
